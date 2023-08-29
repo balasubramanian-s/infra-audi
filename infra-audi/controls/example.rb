@@ -14,14 +14,34 @@ control "aws-single-vpc-exists-check" do                                    # A 
   end
 end
 
-# Plural resources can be inspected to check for specific resource details.
-control "aws-vpcs-check" do
+# s3
+control 'aws-s3-buckets-1.0' do
   impact 1.0
-  title "Check in all the VPCs for default sg not allowing 22 inwards"
-  aws_vpcs.vpc_ids.each do |vpc_id|
-    describe aws_security_group(vpc_id: vpc_id, group_name: "default") do
-      it { should allow_in(port: 22) }
-    end
+  title 'Ensure AWS S3 Buckets plural resource has the correct properties.'
+  describe aws_s3_buckets do
+    it { should exist }
+    its('count') { should be >= 1 }
+    its('bucket_names') { should_not include 'not-there-hopefully' }
+  end
+end
+#ec2
+
+control 'aws-ec2-capacity-reservations-1.0' do
+  title 'Describes one or more of your Capacity Reservations.'
+
+  describe aws_ec2_capacity_reservations do
+    it { should exist }
+  end
+
+  describe aws_ec2_capacity_reservations do
+    its('tenancies') { should_not include 'default' }
+    its('total_instance_counts') { should include 1 }
+    its('ebs_optimized') { should include false }
+    its('ephemeral_storages') { should include false }
+    its('states') { should include 'active' }
+    its('end_date_types') { should include 'unlimited' }
+    its('instance_match_criterias') { should include 'open' }
+    its('tags') { should_not be_empty }
   end
 end
 
