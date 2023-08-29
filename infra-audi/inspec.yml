@@ -18,4 +18,4 @@ depends:
   - name: inspec-aws
     url: https://github.com/inspec/inspec-aws/archive/master.tar.gz
 supports:
-  - platform: aws
+  - platform: ubuntu/20.04
