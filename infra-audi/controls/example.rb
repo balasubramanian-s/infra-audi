@@ -4,15 +4,6 @@ title "Sample Section"
 
 aws_vpc_id = input("aws_vpc_id")
 
-# You add controls here
-control "aws-single-vpc-exists-check" do                                    # A unique ID for this control.
-  only_if { aws_vpc_id != "" }                                              # Only run this control if the `aws_vpc_id` input is provided.
-  impact 1.0                                                                # The criticality, if this control fails.
-  title "Check to see if custom VPC exists."                                # A human-readable title.
-  describe aws_vpc(aws_vpc_id) do                                           # The test itself.
-    it { should exist }
-  end
-end
 
 # s3
 control 'aws-s3-buckets-1.0' do
